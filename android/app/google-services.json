@@ -1,0 +1,83 @@
+{
+  "project_info": {
+    "project_number": "1031354240085",
+    "firebase_url": "https://vote-app-cc87c-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "vote-app-cc87c",
+    "storage_bucket": "vote-app-cc87c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1031354240085:android:022bf8656e3fd0d39058dc",
+        "android_client_info": {
+          "package_name": "com.example.app_test"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1031354240085-jjbqtpt497g49nne1shmc5kuj6dp4ifv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDWZ_bwOm-1uB-7YhTsyz8hkDYBquHLd0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1031354240085-jjbqtpt497g49nne1shmc5kuj6dp4ifv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1031354240085-micpaauln6o4l2l8nis0b67339qs1ja8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.webPrototype"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1031354240085:android:756c793f85f90a7b9058dc",
+        "android_client_info": {
+          "package_name": "com.example.web_prototype"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1031354240085-jjbqtpt497g49nne1shmc5kuj6dp4ifv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDWZ_bwOm-1uB-7YhTsyz8hkDYBquHLd0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1031354240085-jjbqtpt497g49nne1shmc5kuj6dp4ifv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1031354240085-micpaauln6o4l2l8nis0b67339qs1ja8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.webPrototype"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
