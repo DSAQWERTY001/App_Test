@@ -1,5 +1,11 @@
+import 'dart:convert';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import '../component/cardcom.dart';
+import 'package:http/http.dart' as Http;
 
 class VotePage extends StatefulWidget {
   VotePage({Key? key}) : super(key: key);
@@ -9,20 +15,76 @@ class VotePage extends StatefulWidget {
 }
 
 class _VotePageState extends State<VotePage> {
-  final user = FirebaseAuth.instance.currentUser!.email;
+  final user = "";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        child: Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('Vote Page'),
-            ],
-          ),
-        ),
+      // body: Container(),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection("EventCreate")
+            // .doc("AdminCreate")
+            // .collection(user!)
+            // .where('Event Name', isEqualTo: "Testfromflutter")
+            .orderBy('Start Date')
+            .snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          return !snapshot.hasData
+              ? Center(
+                  child: Center(
+                  child: Text("Vote Not Found"),
+                ))
+              : ListView(
+                  children:
+                      snapshot.data!.docs.map((DocumentSnapshot document) {
+                    Map<String, dynamic> data =
+                        document.data()! as Map<String, dynamic>;
+                    List<dynamic> vot = data['Voter'];
+                    Timestamp ts = data['Start Date'] as Timestamp;
+                    Timestamp te = data['End Date'] as Timestamp;
+                    bool check;
+                    DateTime sdate = ts.toDate();
+                    DateTime edate = te.toDate();
+                    check = DateTime.now().isAfter(sdate) &&
+                            DateTime.now().isBefore(edate)
+                        ? true
+                        : false;
+                    // T? cast<T>(x) => x is T ? x : null;
+                    // var x = getUserVote(data['Event Name'], user!);
+
+                    // bool? CT = cast<bool>(x);
+                    for (int i = 0; i < vot.length; i++) {
+                      if (data['Voter'][i] == user &&
+                          DateTime.now().isBefore(edate)) {
+                        return Container(
+                          margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                          child: CardExpo(
+                            TextTitle: data['Event Name'],
+                            Descrip: data['Description'],
+                            check: check,
+                            Candi: data['Candidate'],
+                            score: data['Score'],
+                            EndDate: edate,
+                            StaDate: sdate,
+                            voter: data['Voter'][i],
+                            page: true,
+                          ),
+                        );
+                      }
+                    }
+
+                    return Container();
+                  }).toList(),
+                );
+        },
       ),
     );
+  }
+
+  Future getUserVote(String name, String voter) async {
+    final response = await Http.get(Uri.parse(
+        'https://e-voting-api-kmutnb-ac-th.vercel.app/didVoted/$name/$voter'));
+    var data = jsonDecode(response.body);
+    return data["voted"];
   }
 }

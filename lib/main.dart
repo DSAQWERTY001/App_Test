@@ -1,3 +1,4 @@
+import 'package:app_test/component/state.dart';
 import 'package:app_test/page/login.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -31,20 +32,34 @@ class MyApp extends StatelessWidget {
 class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
-        body: StreamBuilder<User?>(
-          stream: FirebaseAuth.instance.authStateChanges(),
+        body: FutureBuilder<LoginUser>(
+          future: LoginState(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              // print(FirebaseAuth.instance.currentUser!.uid);
-              // print(FirebaseAuth.instance.currentUser!.email);
-              // Duration(
-              //   seconds: 50,
-              // );
-              return MyHomePage(title: "title");
+              if (snapshot.data!.Status == "success") {
+                return MyHomePage(title: "title");
+              }
+              return LoginPage();
             } else {
               return LoginPage();
             }
           },
         ),
+
+        // body: StreamBuilder<User?>(
+        //   stream: FirebaseAuth.instance.authStateChanges(),
+        //   builder: (context, snapshot) {
+        //     if (snapshot.hasData) {
+        //       // print(FirebaseAuth.instance.currentUser!.uid);
+        //       // print(FirebaseAuth.instance.currentUser!.email);
+        //       // Duration(
+        //       //   seconds: 50,
+        //       // );
+        //       return MyHomePage(title: "title");
+        //     } else {
+        //       return LoginPage();
+        //     }
+        //   },
+        // ),
       );
 }

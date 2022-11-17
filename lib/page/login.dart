@@ -1,7 +1,11 @@
+import 'dart:convert';
+
+import 'package:app_test/component/state.dart';
 import 'package:app_test/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as Http;
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key? key}) : super(key: key);
@@ -37,7 +41,7 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   TextField(
                     onChanged: (value) {
-                      user = value;
+                      GlobalValues.setUsername(value);
                     },
                     style: TextStyle(fontSize: 16, color: Colors.blue),
                     decoration: const InputDecoration(
@@ -62,7 +66,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   TextField(
                     onChanged: (value) {
-                      pass = value;
+                      GlobalValues.setPassword(value);
                     },
                     obscureText: true,
                     style: TextStyle(fontSize: 16, color: Colors.blue),
@@ -94,7 +98,10 @@ class _LoginPageState extends State<LoginPage> {
               child: FlatButton(
                 padding: EdgeInsets.symmetric(horizontal: 27, vertical: 14),
                 color: Colors.blue,
-                onPressed: signIn,
+                onPressed: () async {
+                  GlobalValues.setCheckUser(true);
+                  LoginState();
+                },
                 child: Text(
                   "login".toUpperCase(),
                   style: TextStyle(
@@ -135,28 +142,62 @@ class _LoginPageState extends State<LoginPage> {
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     });
+  }
+}
 
-    // if (currentUser != null) {
-    //   await FirebaseFirestore.instance
-    //       .collection("users")
-    //       .doc(currentUser!.uid)
-    //       .get()
-    //       .then((snap) {
-    //     if (!snap.exists) {
-    //       Navigator.push(
-    //           context, MaterialPageRoute(builder: (context) => MainPage()));
-    //     } else {
-    //       SnackBar snackBar = SnackBar(
-    //         content: Text(
-    //           "you are not admin",
-    //           style: TextStyle(fontSize: 36, color: Colors.black),
-    //         ),
-    //         backgroundColor: Colors.pinkAccent,
-    //         duration: Duration(milliseconds: 1800),
-    //       );
-    //       ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    //     }
-    //   });
-    // }
+Future<LoginUser> LoginState() async {
+  final response = await Http.post(
+      Uri.parse('https://api.account.kmutnb.ac.th/api/account-api/user-authen'),
+      headers: {
+        'Authorization': 'Bearer WtGQihSKCcYOnNE7Z1IQNyz2betLpSIv',
+      },
+      body: {
+        'scopes': 'student,personal',
+        'username': GlobalValues.getUsername(),
+        'password': GlobalValues.getPassword(),
+      });
+  print(GlobalValues.getCheckUser());
+  if (response.statusCode == 200) {
+    var data = jsonDecode(response.body);
+    print(data["api_status"]);
+    return LoginUser.fromJson(jsonDecode(response.body));
+  } else {
+    throw Exception('Failed to load album');
+  }
+}
+
+class LoginUser {
+  final String Status;
+  // final String userInfo;
+
+  LoginUser({
+    // required this.userInfo,
+    required this.Status,
+  });
+  factory LoginUser.fromJson(Map<String, dynamic> json) {
+    return LoginUser(
+      Status: json["api_status"],
+      // userInfo: json["userInfo"],
+    );
+  }
+}
+
+class UserInfo {
+  String username;
+  String displayname;
+  String email;
+
+  UserInfo({
+    required this.username,
+    required this.displayname,
+    required this.email,
+  });
+
+  factory UserInfo.fromJson(Map<String, dynamic> json) {
+    return UserInfo(
+      username: json["userInfo"],
+      displayname: json["userInfo"],
+      email: json["userInfo"],
+    );
   }
 }
