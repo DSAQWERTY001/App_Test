@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:app_test/component/state.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +16,7 @@ class VotePage extends StatefulWidget {
 }
 
 class _VotePageState extends State<VotePage> {
-  final user = "";
+  final user = GlobalValues.getUsernameLoggedin();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,6 +69,8 @@ class _VotePageState extends State<VotePage> {
                             StaDate: sdate,
                             voter: data['Voter'][i],
                             page: true,
+                            winner: data['winner'],
+                            allvoter: vot.length,
                           ),
                         );
                       }

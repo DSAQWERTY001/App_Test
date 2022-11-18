@@ -33,6 +33,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Center(
           child: Text(widget.title),
         ),
+        automaticallyImplyLeading: false,
       ),
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),

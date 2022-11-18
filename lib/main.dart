@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:app_test/component/state.dart';
 import 'package:app_test/page/login.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -37,7 +39,10 @@ class MainPage extends StatelessWidget {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               if (snapshot.data!.Status == "success") {
-                return MyHomePage(title: "title");
+                // var data = jsonDecode(snapshot.data!.userInfo);
+                GlobalValues.setUsernameLoggedin(
+                    snapshot.data!.userInfo["username"]);
+                return MyHomePage(title: "Vote App");
               }
               return LoginPage();
             } else {

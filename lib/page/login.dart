@@ -17,6 +17,12 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   String user = "";
   String pass = "";
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    LoginState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,8 +105,11 @@ class _LoginPageState extends State<LoginPage> {
                 padding: EdgeInsets.symmetric(horizontal: 27, vertical: 14),
                 color: Colors.blue,
                 onPressed: () async {
-                  GlobalValues.setCheckUser(true);
-                  LoginState();
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MainPage(),
+                      ));
                 },
                 child: Text(
                   "login".toUpperCase(),
@@ -118,31 +127,31 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Future signIn() async {
-    SnackBar snackBar = SnackBar(
-      content: Text(
-        "Login...",
-        style: TextStyle(fontSize: 36, color: Colors.black),
-      ),
-      backgroundColor: Colors.pinkAccent,
-      duration: Duration(milliseconds: 1800),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    User? currentUser;
-    await FirebaseAuth.instance
-        .signInWithEmailAndPassword(email: user, password: pass)
-        .catchError((onError) {
-      final snackBar = SnackBar(
-        content: Text(
-          "Error Occured : " + onError.toString(),
-          style: TextStyle(fontSize: 36, color: Colors.black),
-        ),
-        backgroundColor: Colors.pinkAccent,
-        duration: Duration(seconds: 5),
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    });
-  }
+  // Future signIn() async {
+  //   SnackBar snackBar = SnackBar(
+  //     content: Text(
+  //       "Login...",
+  //       style: TextStyle(fontSize: 36, color: Colors.black),
+  //     ),
+  //     backgroundColor: Colors.pinkAccent,
+  //     duration: Duration(milliseconds: 1800),
+  //   );
+  //   ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  //   User? currentUser;
+  //   await FirebaseAuth.instance
+  //       .signInWithEmailAndPassword(email: user, password: pass)
+  //       .catchError((onError) {
+  //     final snackBar = SnackBar(
+  //       content: Text(
+  //         "Error Occured : " + onError.toString(),
+  //         style: TextStyle(fontSize: 36, color: Colors.black),
+  //       ),
+  //       backgroundColor: Colors.pinkAccent,
+  //       duration: Duration(seconds: 5),
+  //     );
+  //     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  //   });
+  // }
 }
 
 Future<LoginUser> LoginState() async {
@@ -156,10 +165,10 @@ Future<LoginUser> LoginState() async {
         'username': GlobalValues.getUsername(),
         'password': GlobalValues.getPassword(),
       });
-  print(GlobalValues.getCheckUser());
   if (response.statusCode == 200) {
-    var data = jsonDecode(response.body);
-    print(data["api_status"]);
+    // var data = jsonDecode(response.body);
+    // print(data["api_status"]);
+    // print(data["userInfo"]["username"]);
     return LoginUser.fromJson(jsonDecode(response.body));
   } else {
     throw Exception('Failed to load album');
@@ -168,36 +177,16 @@ Future<LoginUser> LoginState() async {
 
 class LoginUser {
   final String Status;
-  // final String userInfo;
+  final userInfo;
 
   LoginUser({
-    // required this.userInfo,
+    required this.userInfo,
     required this.Status,
   });
   factory LoginUser.fromJson(Map<String, dynamic> json) {
     return LoginUser(
       Status: json["api_status"],
-      // userInfo: json["userInfo"],
-    );
-  }
-}
-
-class UserInfo {
-  String username;
-  String displayname;
-  String email;
-
-  UserInfo({
-    required this.username,
-    required this.displayname,
-    required this.email,
-  });
-
-  factory UserInfo.fromJson(Map<String, dynamic> json) {
-    return UserInfo(
-      username: json["userInfo"],
-      displayname: json["userInfo"],
-      email: json["userInfo"],
+      userInfo: json["userInfo"],
     );
   }
 }

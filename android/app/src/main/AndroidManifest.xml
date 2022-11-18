@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.app_test">
    <application
-        android:label="app_test"
+        android:label="Voting by Blockchain"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

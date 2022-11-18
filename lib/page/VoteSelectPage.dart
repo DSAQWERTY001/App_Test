@@ -55,6 +55,9 @@ class _VoteSelectState extends State<VoteSelect> {
               "Description : " + widget.Descrip,
               style: TextStyle(fontSize: 18),
             ),
+            SizedBox(
+              height: 10,
+            ),
             // Expanded(
             //     child: Column(
             //   children: [
@@ -95,7 +98,67 @@ class _VoteSelectState extends State<VoteSelect> {
                       ),
                   itemCount: data_target.length),
             ),
-
+            Expanded(
+                child: Stack(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Row(
+                      children: [
+                        RButton(
+                            str: "Cancle",
+                            press: () {
+                              Navigator.pop(context);
+                            },
+                            bColor: Colors.red,
+                            tColor: Colors.white),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        RButton(
+                            str: "Submit",
+                            press: () async {
+                              if (_onValue == "") {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      AlertDialog(
+                                    title: const Text(
+                                        'Please Choose your chioce.'),
+                                    content:
+                                        const Text('AlertDialog description'),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: const Text('OK'),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              } else {
+                                showRepageDialog(context);
+                                final response = await Http.get(Uri.parse(
+                                    'https://e-voting-api-kmutnb-ac-th.vercel.app/addVote/${widget.Eventname}/$_onValue/${widget.user}'));
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            MyHomePage(title: "title")));
+                              }
+                            },
+                            bColor: Colors.blue,
+                            tColor: Colors.white)
+                      ],
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 5,
+                )
+              ],
+            ))
             // Row(
             //     // children: data.map((e) => ListTile(
             //     //       title: Text(e),
@@ -112,61 +175,64 @@ class _VoteSelectState extends State<VoteSelect> {
           ],
         ),
       ),
-      bottomNavigationBar: Stack(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Row(
-                children: [
-                  RButton(
-                      str: "Cancle",
-                      press: () {
-                        Navigator.pop(context);
-                      },
-                      bColor: Colors.red,
-                      tColor: Colors.white),
-                ],
-              ),
-              Row(
-                children: [
-                  RButton(
-                      str: "Submit",
-                      press: () async {
-                        if (_onValue == "") {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) => AlertDialog(
-                              title: const Text('Please Choose your chioce.'),
-                              content: const Text('AlertDialog description'),
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () => Navigator.pop(context),
-                                  child: const Text('OK'),
-                                ),
-                              ],
-                            ),
-                          );
-                        } else {
-                          showRepageDialog(context);
-                          final response = await Http.get(Uri.parse(
-                              'https://e-voting-api-kmutnb-ac-th.vercel.app/addVote/${widget.Eventname}/$_onValue/${widget.user}'));
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      MyHomePage(title: "title")));
-                        }
-                      },
-                      bColor: Colors.blue,
-                      tColor: Colors.white)
-                ],
-              ),
-            ],
-          ),
-          Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 20)),
-        ],
-      ),
+
+      // bottomNavigationBar: Stack(
+      //   children: [
+      //     Row(
+      //       mainAxisAlignment: MainAxisAlignment.spaceAround,
+      //       children: [
+      //         Row(
+      //           children: [
+      //             RButton(
+      //                 str: "Cancle",
+      //                 press: () {
+      //                   Navigator.pop(context);
+      //                 },
+      //                 bColor: Colors.red,
+      //                 tColor: Colors.white),
+      //           ],
+      //         ),
+      //         Row(
+      //           children: [
+      //             RButton(
+      //                 str: "Submit",
+      //                 press: () async {
+      //                   if (_onValue == "") {
+      //                     showDialog(
+      //                       context: context,
+      //                       builder: (BuildContext context) => AlertDialog(
+      //                         title: const Text('Please Choose your chioce.'),
+      //                         content: const Text('AlertDialog description'),
+      //                         actions: <Widget>[
+      //                           TextButton(
+      //                             onPressed: () => Navigator.pop(context),
+      //                             child: const Text('OK'),
+      //                           ),
+      //                         ],
+      //                       ),
+      //                     );
+      //                   } else {
+      //                     showRepageDialog(context);
+      //                     final response = await Http.get(Uri.parse(
+      //                         'https://e-voting-api-kmutnb-ac-th.vercel.app/addVote/${widget.Eventname}/$_onValue/${widget.user}'));
+      //                     Navigator.push(
+      //                         context,
+      //                         MaterialPageRoute(
+      //                             builder: (context) =>
+      //                                 MyHomePage(title: "title")));
+      //                   }
+      //                 },
+      //                 bColor: Colors.blue,
+      //                 tColor: Colors.white)
+      //           ],
+      //         ),
+      //       ],
+      //     ),
+      //     SizedBox(
+      //       height: 10,
+      //     )
+      //   ],
+      // ),
     );
   }
 

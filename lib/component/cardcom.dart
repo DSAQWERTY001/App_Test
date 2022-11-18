@@ -18,6 +18,8 @@ class CardExpo extends StatelessWidget {
   final List<dynamic> score;
   final String voter;
   final bool page;
+  final List<dynamic> winner;
+  final int allvoter;
   const CardExpo({
     Key? key,
     required this.TextTitle,
@@ -29,6 +31,8 @@ class CardExpo extends StatelessWidget {
     required this.score,
     required this.voter,
     required this.page,
+    required this.winner,
+    required this.allvoter,
   }) : super(key: key);
 
   @override
@@ -153,6 +157,21 @@ class CardExpo extends StatelessWidget {
   }
 
   Future<void> showLoadingDialog(BuildContext context) async {
+    String s = "";
+    String ts = "";
+    String tn = "";
+    const initialValue = 0.0;
+    final resultvoted = score.fold<double>(
+        initialValue, (previousValue, element) => previousValue + element);
+    if (winner.length > 1) {
+      s = ",";
+    }
+    if (StaDate.minute < 10) {
+      ts = "0";
+    }
+    if (EndDate.minute < 10) {
+      tn = "0";
+    }
     return showDialog(
       context: context,
       builder: (BuildContext context) => AlertDialog(
@@ -162,6 +181,52 @@ class CardExpo extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(Descrip + "\n"),
+
+              Container(
+                child: Row(
+                  children: [
+                    Text("winner : "),
+                    Expanded(
+                      child: Row(
+                        children: winner
+                            .map((e) => Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    SizedBox(
+                                      child: Text(e + s),
+                                    ),
+                                    SizedBox(
+                                      width: 40,
+                                    )
+                                  ],
+                                ))
+                            .toList(),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              SizedBox(
+                height: 15,
+              ),
+              Row(
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text("All Voter : " + allvoter.toString()),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Text("All Voted : " + resultvoted.toInt().toString()),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 15,
+              ),
               Container(
                   child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -193,8 +258,30 @@ class CardExpo extends StatelessWidget {
                 ],
               )),
               // Text("${alldata.length}"),
-              Text(StaDate.toString() + "\n"),
-              Text(EndDate.toString() + "\n"),
+              Text("Start : " +
+                  StaDate.day.toString() +
+                  "-" +
+                  StaDate.month.toString() +
+                  "-" +
+                  StaDate.year.toString() +
+                  "   " +
+                  StaDate.hour.toString() +
+                  ":" +
+                  ts +
+                  StaDate.minute.toString() +
+                  "\n"),
+              Text("End : " +
+                  EndDate.day.toString() +
+                  "-" +
+                  EndDate.month.toString() +
+                  "-" +
+                  EndDate.year.toString() +
+                  "   " +
+                  EndDate.hour.toString() +
+                  ":" +
+                  tn +
+                  EndDate.minute.toString() +
+                  "\n"),
             ],
           ),
         ),

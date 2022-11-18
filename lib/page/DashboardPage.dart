@@ -16,8 +16,7 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-  final user = FirebaseAuth.instance.currentUser?.email;
-  List<String> data = ["data", "aimbot", "impro"];
+  final user = GlobalValues.getUsernameLoggedin();
   var _onValue = '';
   @override
   void initState() {
@@ -58,15 +57,20 @@ class _DashboardPageState extends State<DashboardPage> {
                     // var x = getUserVote(data['Event Name'], user!);
                     if (DateTime.now().isAfter(edate)) {
                       Future getscoreVote() async {
-                        final response = await Http.get(Uri.parse(
+                        final responseScore = await Http.get(Uri.parse(
                             'https://e-voting-api-kmutnb-ac-th.vercel.app/getEventScore/${data['Event Name']}'));
-                        var data_score = jsonDecode(response.body);
+                        final responseWinner = await Http.get(Uri.parse(
+                            'https://e-voting-api-kmutnb-ac-th.vercel.app/winner/${data['Event Name']}'));
+                        var data_score = jsonDecode(responseScore.body);
+                        var data_winner = jsonDecode(responseWinner.body);
                         // print(data_score["score"]);
                         FirebaseFirestore.instance
                             .collection("EventCreate")
                             .doc(document.id)
-                            .update({'Score': data_score["score"]});
-                        return response;
+                            .update({
+                          'Score': data_score["score"],
+                          'winner': data_winner["winner"]
+                        });
                       }
 
                       getscoreVote();
@@ -90,6 +94,8 @@ class _DashboardPageState extends State<DashboardPage> {
                             StaDate: sdate,
                             voter: data['Voter'][i],
                             page: false,
+                            winner: data['winner'],
+                            allvoter: vot.length,
                           ),
                         );
                       }
