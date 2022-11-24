@@ -27,84 +27,92 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection("EventCreate")
-            // .doc("AdminCreate")
-            // .collection(user!)
-            // .where('Event Name', isEqualTo: "Testfromflutter")
-            .orderBy('Start Date')
-            .snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          return !snapshot.hasData
-              ? Center(
-                  child: Center(
-                  child: Text("Vote Not Found"),
-                ))
-              : ListView(
-                  primary: false,
-                  children:
-                      snapshot.data!.docs.map((DocumentSnapshot document) {
-                    Map<String, dynamic> data =
-                        document.data()! as Map<String, dynamic>;
-                    List<dynamic> vot = data['Voter'];
-                    Timestamp ts = data['Start Date'] as Timestamp;
-                    Timestamp te = data['End Date'] as Timestamp;
-                    bool check;
-                    DateTime sdate = ts.toDate();
-                    DateTime edate = te.toDate();
-                    check = DateTime.now().isAfter(edate) ? true : false;
-                    // var x = getUserVote(data['Event Name'], user!);
-                    if (DateTime.now().isAfter(edate)) {
-                      Future getscoreVote() async {
-                        final responseScore = await Http.get(Uri.parse(
-                            'https://e-voting-api-kmutnb-ac-th.vercel.app/getEventScore/${data['Event Name']}'));
-                        final responseWinner = await Http.get(Uri.parse(
-                            'https://e-voting-api-kmutnb-ac-th.vercel.app/winner/${data['Event Name']}'));
-                        var data_score = jsonDecode(responseScore.body);
-                        var data_winner = jsonDecode(responseWinner.body);
-                        // print(data_score["score"]);
-                        FirebaseFirestore.instance
-                            .collection("EventCreate")
-                            .doc(document.id)
-                            .update({
-                          'Score': data_score["score"],
-                          'winner': data_winner["winner"]
-                        });
-                      }
-
-                      getscoreVote();
-                    }
-                    // var a;
-                    // print(x.then((value) => a = value));
-                    // print(a);
-                    // print(GlobalValues.getLoginStatus());
-                    for (int i = 0; i < vot.length; i++) {
-                      if (data['Voter'][i] == user &&
-                          DateTime.now().isAfter(edate)) {
-                        return Container(
-                          margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                          child: CardExpo(
-                            TextTitle: data['Event Name'],
-                            Descrip: data['Description'],
-                            check: check,
-                            Candi: data['Candidate'],
-                            score: data['Score'],
-                            EndDate: edate,
-                            StaDate: sdate,
-                            voter: data['Voter'][i],
-                            page: false,
-                            winner: data['winner'],
-                            allvoter: vot.length,
-                          ),
-                        );
-                      }
-                    }
-
-                    return Container();
-                  }).toList(),
-                );
+      body: RefreshIndicator(
+        edgeOffset: 5,
+        onRefresh: () async {
+          return Future<void>.delayed(const Duration(seconds: 3));
         },
+        child: Container(
+          child: StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance
+                .collection("EventCreate")
+                // .doc("AdminCreate")
+                // .collection(user!)
+                // .where('Event Name', isEqualTo: "Testfromflutter")
+                .orderBy('Start Date')
+                .snapshots(),
+            builder:
+                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              return !snapshot.hasData
+                  ? Center(
+                      child: Center(
+                      child: Text("Vote Not Found"),
+                    ))
+                  : ListView(
+                      children:
+                          snapshot.data!.docs.map((DocumentSnapshot document) {
+                        Map<String, dynamic> data =
+                            document.data()! as Map<String, dynamic>;
+                        List<dynamic> vot = data['Voter'];
+                        Timestamp ts = data['Start Date'] as Timestamp;
+                        Timestamp te = data['End Date'] as Timestamp;
+                        bool check;
+                        DateTime sdate = ts.toDate();
+                        DateTime edate = te.toDate();
+                        check = DateTime.now().isAfter(edate) ? true : false;
+                        // var x = getUserVote(data['Event Name'], user!);
+                        if (DateTime.now().isAfter(edate)) {
+                          Future getscoreVote() async {
+                            final responseScore = await Http.get(Uri.parse(
+                                'https://e-voting-api-kmutnb-ac-th.vercel.app/getEventScore/${data['Event Name']}'));
+                            final responseWinner = await Http.get(Uri.parse(
+                                'https://e-voting-api-kmutnb-ac-th.vercel.app/winner/${data['Event Name']}'));
+                            var data_score = jsonDecode(responseScore.body);
+                            var data_winner = jsonDecode(responseWinner.body);
+                            // print(data_score["score"]);
+                            FirebaseFirestore.instance
+                                .collection("EventCreate")
+                                .doc(document.id)
+                                .update({
+                              'Score': data_score["score"],
+                              'winner': data_winner["winner"]
+                            });
+                          }
+
+                          getscoreVote();
+                        }
+                        // var a;
+                        // print(x.then((value) => a = value));
+                        // print(a);
+                        // print(GlobalValues.getLoginStatus());
+                        for (int i = 0; i < vot.length; i++) {
+                          if (data['Voter'][i] == user &&
+                              DateTime.now().isAfter(edate)) {
+                            return Container(
+                              margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                              child: CardExpo(
+                                TextTitle: data['Event Name'],
+                                Descrip: data['Description'],
+                                check: check,
+                                Candi: data['Candidate'],
+                                score: data['Score'],
+                                EndDate: edate,
+                                StaDate: sdate,
+                                voter: data['Voter'][i],
+                                page: false,
+                                winner: data['winner'],
+                                allvoter: vot.length,
+                              ),
+                            );
+                          }
+                        }
+
+                        return Container();
+                      }).toList(),
+                    );
+            },
+          ),
+        ),
       ),
     );
   }

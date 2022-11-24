@@ -1,4 +1,5 @@
 import 'package:app_test/component/%E0%B8%BAButton.dart';
+import 'package:app_test/component/encrypt.dart';
 import 'package:app_test/main.dart';
 import 'package:app_test/page/DashboardPage.dart';
 import 'package:app_test/page/Homepage.dart';
@@ -25,6 +26,14 @@ class VoteSelect extends StatefulWidget {
 
 class _VoteSelectState extends State<VoteSelect> {
   var _onValue = "";
+  String encrypto = "";
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final List<String> data_target =
@@ -58,25 +67,6 @@ class _VoteSelectState extends State<VoteSelect> {
             SizedBox(
               height: 10,
             ),
-            // Expanded(
-            //     child: Column(
-            //   children: [
-            //     Text("data"),
-            //   ],
-            // )),
-            // RadioGroup<String>.builder(
-            //   direction: Axis.horizontal,
-            //   groupValue: _onValue,
-            //   horizontalAlignment: MainAxisAlignment.spaceAround,
-            //   onChanged: (value) => setState(() {
-            //     _onValue = value;
-            //   }),
-            //   items: data_target,
-            //   textStyle: TextStyle(fontSize: 15, color: Colors.blue),
-            //   itemBuilder: (item) => RadioButtonBuilder(
-            //     item,
-            //   ),
-            // ),
             Expanded(
               child: ListView.separated(
                   // cacheExtent: 2,
@@ -107,7 +97,7 @@ class _VoteSelectState extends State<VoteSelect> {
                     Row(
                       children: [
                         RButton(
-                            str: "Cancle",
+                            str: "Cancel",
                             press: () {
                               Navigator.pop(context);
                             },
@@ -120,6 +110,7 @@ class _VoteSelectState extends State<VoteSelect> {
                         RButton(
                             str: "Submit",
                             press: () async {
+                              encrypto = EncryptData.encryptAES(widget.user);
                               if (_onValue == "") {
                                 showDialog(
                                   context: context,
@@ -140,7 +131,7 @@ class _VoteSelectState extends State<VoteSelect> {
                               } else {
                                 showRepageDialog(context);
                                 final response = await Http.get(Uri.parse(
-                                    'https://e-voting-api-kmutnb-ac-th.vercel.app/addVote/${widget.Eventname}/$_onValue/${widget.user}'));
+                                    'https://e-voting-api-kmutnb-ac-th.vercel.app/addVote/${widget.Eventname}/$_onValue/$encrypto'));
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(

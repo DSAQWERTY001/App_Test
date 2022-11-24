@@ -27,11 +27,14 @@ class _ProfilePageState extends State<ProfilePage> {
                   children: [
                     Container(
                       child: CircleAvatar(
-                        // backgroundColor: Colors.black,
-                        backgroundImage:
-                            AssetImage("asserts/images/profile-picture.jpeg"),
-                        // child: Text("data"),
-                        radius: 75,
+                        backgroundColor: Colors.black,
+                        child: CircleAvatar(
+                          backgroundImage:
+                              AssetImage("asserts/icons/BlLogo22.png"),
+                          // child: Text("data"),
+                          radius: 65,
+                        ),
+                        radius: 70,
                       ),
                     ),
                     SizedBox(

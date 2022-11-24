@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import '../page/VoteSelectPage.dart';
 import 'package:http/http.dart' as Http;
 
+import 'encrypt.dart';
+
 class CardExpo extends StatelessWidget {
   final String TextTitle;
   final String Descrip;
@@ -83,8 +85,9 @@ class CardExpo extends StatelessWidget {
                   //     return CircularProgressIndicator();
                   //   },
                   // );
+                  final encrypto = EncryptData.encryptAES(voter);
                   final response = await Http.get(Uri.parse(
-                      'https://e-voting-api-kmutnb-ac-th.vercel.app/didVoted/$TextTitle/$voter'));
+                      'https://e-voting-api-kmutnb-ac-th.vercel.app/didVoted/$TextTitle/$encrypto'));
                   if (DateTime.now().isAfter(EndDate) ||
                       jsonDecode(response.body)["voted"]) {
                     FirebaseFirestore.instance.collection('EventCreate');

@@ -31,12 +31,13 @@ class _LoginPageState extends State<LoginPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              "Login page".toUpperCase(),
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 25,
-                  color: Colors.blue),
+            Container(
+              child: CircleAvatar(
+                // backgroundColor: Colors.black,
+                backgroundImage: AssetImage("asserts/icons/BlLogo22.png"),
+                // child: Text("data"),
+                radius: 50,
+              ),
             ),
             SizedBox(
               height: 25,
