@@ -8,7 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as Http;
 
 class LoginPage extends StatefulWidget {
-  LoginPage({Key? key}) : super(key: key);
+  bool err;
+  LoginPage({Key? key, required this.err}) : super(key: key);
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -17,11 +18,25 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   String user = "";
   String pass = "";
+  bool _passwordShow = false;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    LoginState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.err) {
+        print(widget.err);
+        final snackBar = SnackBar(
+          content: Text(
+            "Error : username or password invalid!",
+          ),
+          backgroundColor: Colors.pinkAccent,
+          duration: Duration(seconds: 2),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      }
+    });
   }
 
   @override
@@ -75,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
                     onChanged: (value) {
                       GlobalValues.setPassword(value);
                     },
-                    obscureText: true,
+                    obscureText: !_passwordShow,
                     style: TextStyle(fontSize: 16, color: Colors.blue),
                     decoration: const InputDecoration(
                       enabledBorder: OutlineInputBorder(
@@ -97,8 +112,32 @@ class _LoginPageState extends State<LoginPage> {
                 ],
               ),
             ),
+            Row(
+              children: [
+                SizedBox(
+                  width: 45,
+                ),
+                Checkbox(
+                  focusColor: Colors.blue,
+                  activeColor: Colors.blue,
+                  value: _passwordShow,
+                  onChanged: (e) {
+                    setState(() {
+                      _passwordShow = e ?? false;
+                    });
+                  },
+                ),
+                Text(
+                  "Show Password",
+                  style: TextStyle(
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15),
+                ),
+              ],
+            ),
             const SizedBox(
-              height: 20,
+              height: 10,
             ),
             ClipRRect(
               borderRadius: BorderRadius.circular(25),
@@ -162,18 +201,12 @@ Future<LoginUser> LoginState() async {
         'Authorization': 'Bearer WtGQihSKCcYOnNE7Z1IQNyz2betLpSIv',
       },
       body: {
-        'scopes': 'student,personal',
+        'scopes': 'student,personel',
         'username': GlobalValues.getUsername(),
         'password': GlobalValues.getPassword(),
       });
-  if (response.statusCode == 200) {
-    // var data = jsonDecode(response.body);
-    // print(data["api_status"]);
-    // print(data["userInfo"]["username"]);
-    return LoginUser.fromJson(jsonDecode(response.body));
-  } else {
-    throw Exception('Failed to load album');
-  }
+  var data = jsonDecode(response.body);
+  return LoginUser.fromJson(jsonDecode(response.body));
 }
 
 class LoginUser {

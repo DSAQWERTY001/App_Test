@@ -25,7 +25,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MainPage(),
+      home: LoginPage(
+        err: false,
+      ),
       debugShowCheckedModeBanner: false,
     );
   }
@@ -44,10 +46,11 @@ class MainPage extends StatelessWidget {
                     snapshot.data!.userInfo["username"]);
                 return MyHomePage(title: "Vote App");
               }
-              return LoginPage();
-            } else {
-              return LoginPage();
+              return LoginPage(
+                err: true,
+              );
             }
+            return Center(child: const CircularProgressIndicator());
           },
         ),
 

@@ -1,3 +1,5 @@
+import 'package:shared_preferences/shared_preferences.dart';
+
 class GlobalValues {
   static String user = "";
   static String pass = "";
@@ -34,5 +36,19 @@ class GlobalValues {
 
   static bool getCheckUser() {
     return check;
+  }
+}
+
+class Provider {
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
+  Future<bool> getLoginStatus() async {
+    final SharedPreferences prefs = await _prefs;
+    return prefs.getBool('loginSuccess') ?? false;
+  }
+
+  Future<bool> logout() async {
+    final SharedPreferences prefs = await _prefs;
+    return await prefs.clear();
   }
 }

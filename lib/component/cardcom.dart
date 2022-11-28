@@ -148,7 +148,19 @@ class CardExpo extends StatelessWidget {
                 subtitle: Row(
                   children: <Widget>[
                     // Icon(Icons.linear_scale, color: Colors.yellowAccent),
-                    Text(Descrip, style: TextStyle(color: Colors.white70))
+                    Column(
+                      children: [
+                        Text("Start : " + StaDate.toString().substring(0, 16),
+                            style: TextStyle(color: Colors.white70)),
+                        Text("End   : " + EndDate.toString().substring(0, 16),
+                            style: TextStyle(color: Colors.white70))
+                      ],
+                    ),
+                    // page
+                    //     ? Text("Start : " + StaDate.toString() + " ",
+                    //         style: TextStyle(color: Colors.white70))
+                    //     : Text("End : " + EndDate.toString(),
+                    //         style: TextStyle(color: Colors.white70))
                   ],
                 ),
                 trailing: Icon(Icons.keyboard_arrow_right,
@@ -178,13 +190,12 @@ class CardExpo extends StatelessWidget {
     return showDialog(
       context: context,
       builder: (BuildContext context) => AlertDialog(
-        title: Text(TextTitle),
+        title: Center(child: Text(TextTitle)),
         content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(Descrip + "\n"),
-
+              if (Descrip != "") (Text(Descrip + "\n")),
               Container(
                 child: Row(
                   children: [
@@ -211,7 +222,7 @@ class CardExpo extends StatelessWidget {
               ),
 
               SizedBox(
-                height: 15,
+                height: 10,
               ),
               Row(
                 children: [
@@ -220,7 +231,7 @@ class CardExpo extends StatelessWidget {
                     children: [
                       Text("All Voter : " + allvoter.toString()),
                       SizedBox(
-                        height: 5,
+                        height: 10,
                       ),
                       Text("All Voted : " + resultvoted.toInt().toString()),
                     ],
@@ -229,6 +240,13 @@ class CardExpo extends StatelessWidget {
               ),
               SizedBox(
                 height: 15,
+              ),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                Text("Candidate"),
+                Text("Score"),
+              ]),
+              SizedBox(
+                height: 13,
               ),
               Container(
                   child: Row(
@@ -240,7 +258,7 @@ class CardExpo extends StatelessWidget {
                           children: [
                             SizedBox(
                               width: 200,
-                              child: Text(e + "\n"),
+                              child: Text("  " + e + "\n"),
                             ),
                             SizedBox(
                               width: 40,
@@ -253,7 +271,7 @@ class CardExpo extends StatelessWidget {
                         .map((e) => Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                Text(e.toString() + "\n"),
+                                Text(e.toString() + "  " + "\n"),
                               ],
                             ))
                         .toList(),
@@ -261,30 +279,8 @@ class CardExpo extends StatelessWidget {
                 ],
               )),
               // Text("${alldata.length}"),
-              Text("Start : " +
-                  StaDate.day.toString() +
-                  "-" +
-                  StaDate.month.toString() +
-                  "-" +
-                  StaDate.year.toString() +
-                  "   " +
-                  StaDate.hour.toString() +
-                  ":" +
-                  ts +
-                  StaDate.minute.toString() +
-                  "\n"),
-              Text("End : " +
-                  EndDate.day.toString() +
-                  "-" +
-                  EndDate.month.toString() +
-                  "-" +
-                  EndDate.year.toString() +
-                  "   " +
-                  EndDate.hour.toString() +
-                  ":" +
-                  tn +
-                  EndDate.minute.toString() +
-                  "\n"),
+              Text("Start : " + StaDate.toString().substring(0, 16) + "\n"),
+              Text("End   : " + EndDate.toString().substring(0, 16) + "\n"),
             ],
           ),
         ),

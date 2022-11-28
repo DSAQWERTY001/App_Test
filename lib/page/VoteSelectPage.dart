@@ -116,10 +116,9 @@ class _VoteSelectState extends State<VoteSelect> {
                                   context: context,
                                   builder: (BuildContext context) =>
                                       AlertDialog(
-                                    title: const Text(
+                                    title: const Text('Error'),
+                                    content: const Text(
                                         'Please Choose your chioce.'),
-                                    content:
-                                        const Text('AlertDialog description'),
                                     actions: <Widget>[
                                       TextButton(
                                         onPressed: () => Navigator.pop(context),
@@ -136,7 +135,7 @@ class _VoteSelectState extends State<VoteSelect> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            MyHomePage(title: "title")));
+                                            MyHomePage(title: "Vote App")));
                               }
                             },
                             bColor: Colors.blue,
