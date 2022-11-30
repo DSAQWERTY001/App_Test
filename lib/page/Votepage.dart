@@ -21,70 +21,62 @@ class _VotePageState extends State<VotePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       // body: Container(),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          return Future<void>.delayed(const Duration(seconds: 3));
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection("EventCreate")
+            .orderBy('Start Date')
+            .snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          return !snapshot.hasData
+              ? Center(
+                  child: Center(
+                  child: Text("Vote Not Found"),
+                ))
+              : ListView(
+                  children:
+                      snapshot.data!.docs.map((DocumentSnapshot document) {
+                    Map<String, dynamic> data =
+                        document.data()! as Map<String, dynamic>;
+                    List<dynamic> vot = data['Voter'];
+                    Timestamp ts = data['Start Date'] as Timestamp;
+                    Timestamp te = data['End Date'] as Timestamp;
+                    bool check;
+                    DateTime sdate = ts.toDate();
+                    DateTime edate = te.toDate();
+                    check = DateTime.now().isAfter(sdate) &&
+                            DateTime.now().isBefore(edate)
+                        ? true
+                        : false;
+                    // T? cast<T>(x) => x is T ? x : null;
+                    // var x = getUserVote(data['Event Name'], user!);
+
+                    // bool? CT = cast<bool>(x);
+                    for (int i = 0; i < vot.length; i++) {
+                      if (data['Voter'][i] == user &&
+                          DateTime.now().isBefore(edate)) {
+                        return Container(
+                          margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                          child: CardExpo(
+                            TextTitle: data['Event Name'],
+                            Descrip: data['Description'],
+                            check: check,
+                            Candi: data['Candidate'],
+                            score: data['Score'],
+                            EndDate: edate,
+                            StaDate: sdate,
+                            voter: data['Voter'][i],
+                            page: true,
+                            winner: data['winner'],
+                            allvoter: vot.length,
+                          ),
+                        );
+                      }
+                    }
+
+                    return Container();
+                  }).toList(),
+                );
         },
-        child: Container(
-          child: StreamBuilder<QuerySnapshot>(
-            stream: FirebaseFirestore.instance
-                .collection("EventCreate")
-                .orderBy('Start Date')
-                .snapshots(),
-            builder:
-                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              return !snapshot.hasData
-                  ? Center(
-                      child: Center(
-                      child: Text("Vote Not Found"),
-                    ))
-                  : ListView(
-                      children:
-                          snapshot.data!.docs.map((DocumentSnapshot document) {
-                        Map<String, dynamic> data =
-                            document.data()! as Map<String, dynamic>;
-                        List<dynamic> vot = data['Voter'];
-                        Timestamp ts = data['Start Date'] as Timestamp;
-                        Timestamp te = data['End Date'] as Timestamp;
-                        bool check;
-                        DateTime sdate = ts.toDate();
-                        DateTime edate = te.toDate();
-                        check = DateTime.now().isAfter(sdate) &&
-                                DateTime.now().isBefore(edate)
-                            ? true
-                            : false;
-                        // T? cast<T>(x) => x is T ? x : null;
-                        // var x = getUserVote(data['Event Name'], user!);
-
-                        // bool? CT = cast<bool>(x);
-                        for (int i = 0; i < vot.length; i++) {
-                          if (data['Voter'][i] == user &&
-                              DateTime.now().isBefore(edate)) {
-                            return Container(
-                              margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                              child: CardExpo(
-                                TextTitle: data['Event Name'],
-                                Descrip: data['Description'],
-                                check: check,
-                                Candi: data['Candidate'],
-                                score: data['Score'],
-                                EndDate: edate,
-                                StaDate: sdate,
-                                voter: data['Voter'][i],
-                                page: true,
-                                winner: data['winner'],
-                                allvoter: vot.length,
-                              ),
-                            );
-                          }
-                        }
-
-                        return Container();
-                      }).toList(),
-                    );
-            },
-          ),
-        ),
       ),
     );
   }
