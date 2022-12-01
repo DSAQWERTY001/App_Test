@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as Http;
+import 'package:encrypt/encrypt.dart' as en;
 
 class LoginPage extends StatefulWidget {
   bool err;

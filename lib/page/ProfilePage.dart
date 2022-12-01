@@ -3,8 +3,10 @@ import 'package:app_test/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../component/encrypt.dart';
 import '../component/state.dart';
 import 'login.dart';
+import 'package:encrypt/encrypt.dart' as en;
 
 class ProfilePage extends StatefulWidget {
   ProfilePage({Key? key}) : super(key: key);
@@ -22,63 +24,65 @@ class _ProfilePageState extends State<ProfilePage> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data!.Status == "success") {
-              return SingleChildScrollView(
+              return Container(
                 child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        child: CircleAvatar(
-                          backgroundColor: Colors.black,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
                           child: CircleAvatar(
-                            backgroundImage:
-                                AssetImage("asserts/icons/BlLogo22.png"),
-                            // child: Text("data"),
-                            radius: 65,
+                            backgroundColor: Colors.black,
+                            child: CircleAvatar(
+                              backgroundImage:
+                                  AssetImage("asserts/icons/BlLogo22.png"),
+                              // child: Text("data"),
+                              radius: 65,
+                            ),
+                            radius: 70,
                           ),
-                          radius: 70,
                         ),
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Text(
-                        snapshot.data!.userInfo["firstname_en"] +
-                            " " +
-                            snapshot.data!.userInfo["lastname_en"],
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        "Username : " + snapshot.data!.userInfo["username"],
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        "Email : " + snapshot.data!.userInfo["email"],
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      RButton(
-                          str: "Logout",
-                          press: () {
-                            GlobalValues.setUsername("");
-                            GlobalValues.setPassword("");
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => LoginPage(err: false),
-                                ));
-                          },
-                          bColor: Colors.red,
-                          tColor: Colors.white),
-                    ],
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          snapshot.data!.userInfo["firstname_en"] +
+                              " " +
+                              snapshot.data!.userInfo["lastname_en"],
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          "Username : " + snapshot.data!.userInfo["username"],
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          "Email : " + snapshot.data!.userInfo["email"],
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        RButton(
+                            str: "Logout",
+                            press: () {
+                              GlobalValues.setUsername("");
+                              GlobalValues.setPassword("");
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => LoginPage(err: false),
+                                  ));
+                            },
+                            bColor: Colors.red,
+                            tColor: Colors.white),
+                      ],
+                    ),
                   ),
                 ),
               );
